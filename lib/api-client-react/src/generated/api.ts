@@ -62,11 +62,11 @@ export const getHealthCheckQueryOptions = <
   TData = Awaited<ReturnType<typeof healthCheck>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof healthCheck>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -97,11 +97,11 @@ export function useHealthCheck<
   TData = Awaited<ReturnType<typeof healthCheck>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof healthCheck>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getHealthCheckQueryOptions(options);
@@ -137,11 +137,11 @@ export const getGetTrafficDensityQueryOptions = <
   TData = Awaited<ReturnType<typeof getTrafficDensity>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getTrafficDensity>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -172,11 +172,11 @@ export function useGetTrafficDensity<
   TData = Awaited<ReturnType<typeof getTrafficDensity>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getTrafficDensity>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetTrafficDensityQueryOptions(options);
@@ -212,11 +212,11 @@ export const getGetTrafficDensityHistoryQueryOptions = <
   TData = Awaited<ReturnType<typeof getTrafficDensityHistory>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getTrafficDensityHistory>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -248,11 +248,11 @@ export function useGetTrafficDensityHistory<
   TData = Awaited<ReturnType<typeof getTrafficDensityHistory>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getTrafficDensityHistory>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetTrafficDensityHistoryQueryOptions(options);
@@ -288,11 +288,11 @@ export const getGetVehicleCountsQueryOptions = <
   TData = Awaited<ReturnType<typeof getVehicleCounts>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getVehicleCounts>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -323,11 +323,11 @@ export function useGetVehicleCounts<
   TData = Awaited<ReturnType<typeof getVehicleCounts>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getVehicleCounts>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetVehicleCountsQueryOptions(options);
@@ -363,11 +363,11 @@ export const getGetDashboardStatsQueryOptions = <
   TData = Awaited<ReturnType<typeof getDashboardStats>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getDashboardStats>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -398,11 +398,11 @@ export function useGetDashboardStats<
   TData = Awaited<ReturnType<typeof getDashboardStats>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getDashboardStats>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetDashboardStatsQueryOptions(options);
@@ -438,11 +438,11 @@ export const getGetSignalTimingQueryOptions = <
   TData = Awaited<ReturnType<typeof getSignalTiming>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getSignalTiming>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -473,11 +473,11 @@ export function useGetSignalTiming<
   TData = Awaited<ReturnType<typeof getSignalTiming>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getSignalTiming>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetSignalTimingQueryOptions(options);
@@ -516,11 +516,11 @@ export const getGetCongestionAnalyticsQueryOptions = <
   TData = Awaited<ReturnType<typeof getCongestionAnalytics>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getCongestionAnalytics>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -552,11 +552,11 @@ export function useGetCongestionAnalytics<
   TData = Awaited<ReturnType<typeof getCongestionAnalytics>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getCongestionAnalytics>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetCongestionAnalyticsQueryOptions(options);
@@ -592,11 +592,11 @@ export const getGetEmergencyEventsQueryOptions = <
   TData = Awaited<ReturnType<typeof getEmergencyEvents>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getEmergencyEvents>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -627,11 +627,11 @@ export function useGetEmergencyEvents<
   TData = Awaited<ReturnType<typeof getEmergencyEvents>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getEmergencyEvents>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetEmergencyEventsQueryOptions(options);
@@ -670,11 +670,11 @@ export const getGetActiveEmergencyCorridorQueryOptions = <
   TData = Awaited<ReturnType<typeof getActiveEmergencyCorridor>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getActiveEmergencyCorridor>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -706,11 +706,11 @@ export function useGetActiveEmergencyCorridor<
   TData = Awaited<ReturnType<typeof getActiveEmergencyCorridor>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getActiveEmergencyCorridor>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetActiveEmergencyCorridorQueryOptions(options);
@@ -746,11 +746,11 @@ export const getGetIntersectionsQueryOptions = <
   TData = Awaited<ReturnType<typeof getIntersections>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getIntersections>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -781,11 +781,11 @@ export function useGetIntersections<
   TData = Awaited<ReturnType<typeof getIntersections>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getIntersections>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetIntersectionsQueryOptions(options);
@@ -827,11 +827,11 @@ export const getGetIntersectionVideoQueryOptions = <
 >(
   intersectionId: string,
   options?: {
-    query?: UseQueryOptions<
+    query?: (Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getIntersectionVideo>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey });
     request?: SecondParameter<typeof customFetch>;
   },
 ) => {
@@ -872,11 +872,11 @@ export function useGetIntersectionVideo<
 >(
   intersectionId: string,
   options?: {
-    query?: UseQueryOptions<
+    query?: (Omit<UseQueryOptions<
       Awaited<ReturnType<typeof getIntersectionVideo>>,
       TError,
       TData
-    >;
+    >, 'queryKey'> & { queryKey?: QueryKey });
     request?: SecondParameter<typeof customFetch>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
@@ -916,11 +916,11 @@ export const getGetLaneDensityQueryOptions = <
   TData = Awaited<ReturnType<typeof getLaneDensity>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getLaneDensity>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -951,11 +951,11 @@ export function useGetLaneDensity<
   TData = Awaited<ReturnType<typeof getLaneDensity>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getLaneDensity>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetLaneDensityQueryOptions(options);
@@ -991,11 +991,11 @@ export const getGetCityHeatmapQueryOptions = <
   TData = Awaited<ReturnType<typeof getCityHeatmap>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getCityHeatmap>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }) => {
   const { query: queryOptions, request: requestOptions } = options ?? {};
@@ -1026,11 +1026,11 @@ export function useGetCityHeatmap<
   TData = Awaited<ReturnType<typeof getCityHeatmap>>,
   TError = ErrorType<unknown>,
 >(options?: {
-  query?: UseQueryOptions<
+  query?: (Omit<UseQueryOptions<
     Awaited<ReturnType<typeof getCityHeatmap>>,
     TError,
     TData
-  >;
+  >, 'queryKey'> & { queryKey?: QueryKey });
   request?: SecondParameter<typeof customFetch>;
 }): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
   const queryOptions = getGetCityHeatmapQueryOptions(options);
