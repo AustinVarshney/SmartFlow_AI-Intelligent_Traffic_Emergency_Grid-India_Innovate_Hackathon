@@ -4,6 +4,7 @@ import {
   Video, 
   TrafficCone, 
   Ambulance, 
+  Boxes,
   LineChart, 
   Settings,
   Hexagon
@@ -15,6 +16,7 @@ const NAV_ITEMS = [
   { href: "/traffic", label: "Live Traffic", icon: Video },
   { href: "/signals", label: "Signal Control", icon: TrafficCone },
   { href: "/emergency", label: "Emergency Grid", icon: Ambulance },
+  { href: "/simulations", label: "Simulations", icon: Boxes },
   { href: "/analytics", label: "Analytics", icon: LineChart },
   { href: "/settings", label: "Settings", icon: Settings },
 ];

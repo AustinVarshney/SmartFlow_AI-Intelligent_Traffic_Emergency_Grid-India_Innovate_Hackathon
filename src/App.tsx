@@ -7,6 +7,7 @@ import Dashboard from "@/pages/dashboard";
 import Traffic from "@/pages/traffic";
 import Signals from "@/pages/signals";
 import Emergency from "@/pages/emergency";
+import Simulations from "@/pages/simulations";
 import Analytics from "@/pages/analytics";
 import Settings from "@/pages/settings";
 import NotFound from "@/pages/not-found";
@@ -27,6 +28,7 @@ function Router() {
       <Route path="/traffic" component={Traffic} />
       <Route path="/signals" component={Signals} />
       <Route path="/emergency" component={Emergency} />
+      <Route path="/simulations" component={Simulations} />
       <Route path="/analytics" component={Analytics} />
       <Route path="/settings" component={Settings} />
       <Route component={NotFound} />
