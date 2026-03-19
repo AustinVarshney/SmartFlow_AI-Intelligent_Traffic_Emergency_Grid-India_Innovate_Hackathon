@@ -6,7 +6,8 @@ import {
   Ambulance, 
   LineChart, 
   Settings,
-  Hexagon
+  Hexagon,
+  Database
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +17,7 @@ const NAV_ITEMS = [
   { href: "/signals", label: "Signal Control", icon: TrafficCone },
   { href: "/emergency", label: "Emergency Grid", icon: Ambulance },
   { href: "/analytics", label: "Analytics", icon: LineChart },
+  { href: "/dataset", label: "ML Dataset", icon: Database },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
