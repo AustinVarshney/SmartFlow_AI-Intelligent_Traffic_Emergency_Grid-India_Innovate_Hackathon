@@ -6,6 +6,9 @@ interface TrafficCameraSceneProps {
   roads: SimRoadState[];
   cameraIndex: number;
   cameraLabel: string;
+  onCanvasReady?: (canvas: HTMLCanvasElement) => void;
+  showDetectionOverlay?: boolean;
+  boxedFrameSrc?: string;
 }
 
 const CAMERA_POSES: IntersectionCameraPose[] = [
@@ -45,7 +48,14 @@ function Scene({ roads, cameraPose }: { roads: SimRoadState[]; cameraPose: Inter
   return <IntersectionWorld roads={roads} cameraPose={cameraPose} />;
 }
 
-export function TrafficCameraScene({ roads, cameraIndex, cameraLabel }: TrafficCameraSceneProps) {
+export function TrafficCameraScene({
+  roads,
+  cameraIndex,
+  cameraLabel,
+  onCanvasReady,
+  showDetectionOverlay = false,
+  boxedFrameSrc,
+}: TrafficCameraSceneProps) {
   const focusRoad = roads[cameraIndex] ?? roads[0];
   const cameraPose = CAMERA_POSES[cameraIndex] ?? CAMERA_POSES[0];
 
@@ -107,12 +117,24 @@ export function TrafficCameraScene({ roads, cameraIndex, cameraLabel }: TrafficC
       <div className="relative h-full w-full overflow-hidden rounded-lg border border-cyan-200/20 bg-black">
         <Canvas
           shadows={false}
-          gl={{ antialias: true, powerPreference: "high-performance" }}
+          gl={{ antialias: true, powerPreference: "high-performance", preserveDrawingBuffer: true }}
           dpr={[0.75, 1]}
           camera={{ position: cameraPose.position, fov: 42 }}
+          onCreated={(state) => {
+            const canvas = state.gl.domElement as HTMLCanvasElement;
+            onCanvasReady?.(canvas);
+          }}
         >
           <Scene roads={roadsForRender} cameraPose={cameraPose} />
         </Canvas>
+
+        {showDetectionOverlay && boxedFrameSrc && (
+          <img
+            src={boxedFrameSrc}
+            alt="AI boxed frame"
+            className="absolute inset-0 z-20 h-full w-full object-fill pointer-events-none"
+          />
+        )}
 
         <div className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(to_bottom,rgba(148,163,184,0.07)_0px,rgba(148,163,184,0.07)_1px,transparent_1px,transparent_3px)]" />
         <div className="animate-scanline pointer-events-none absolute inset-0 bg-linear-to-b from-cyan-200/0 via-cyan-100/10 to-cyan-200/0" />
