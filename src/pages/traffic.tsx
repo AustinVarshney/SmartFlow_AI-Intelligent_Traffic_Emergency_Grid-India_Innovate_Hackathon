@@ -4,7 +4,7 @@ import { IntersectionDetailView } from "@/components/traffic-sim/IntersectionDet
 import { useTrafficSim } from "@/context/TrafficSimContext";
 import { useLiveIntersections } from "@/hooks/use-smartflow";
 import { SimRoadState } from "@/types/traffic-sim";
-import { AlertTriangle, MapPinned, Radar } from "lucide-react";
+import { AlertTriangle, ExternalLink, MapPinned, Radar } from "lucide-react";
 import { useEffect, useState } from "react";
 
 interface Intersection3DEnvironmentProps {
@@ -16,6 +16,7 @@ export default function Traffic() {
   const { state, selectedIntersection, setIntersectionsFromApi, selectIntersection, backToMap } = useTrafficSim();
   const [isSimLoading, setIsSimLoading] = useState(true);
   const simulationUrl = import.meta.env.VITE_SIMULATIONS_URL || "http://localhost:8081";
+  const aiApiUrl = import.meta.env.VITE_AI_API_URL || "http://localhost:8000";
 
   useEffect(() => {
     if (mapData?.intersections?.length) {
@@ -81,11 +82,21 @@ export default function Traffic() {
       <GlassPanel className="p-4 md:p-6">
         {!selectedIntersection ? (
           <>
-            <div className="mb-4">
-              <h2 className="text-xl font-display font-bold">Live Traffic Intersection</h2>
-              <p className="text-sm text-muted-foreground font-mono">
-                Click on the red floating markers at intersections to view 4-way dashcam feeds. Interactive 3D emergency vehicle routing with real-time traffic light control.
-              </p>
+            <div className="mb-4 flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-display font-bold">Live Traffic Intersection</h2>
+                <p className="text-sm text-muted-foreground font-mono">
+                  Click on the red floating markers at intersections to view 4-way dashcam feeds. Interactive 3D emergency vehicle routing with real-time traffic light control.
+                </p>
+              </div>
+              <a
+                href={simulationUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-mono text-primary flex items-center gap-1 hover:text-white transition-colors whitespace-nowrap"
+              >
+                OPEN IN NEW TAB <ExternalLink className="w-3 h-3" />
+              </a>
             </div>
 
             <div className="bg-black/20 border border-white/10 rounded-lg overflow-hidden relative" style={{ height: "560px" }}>
@@ -109,7 +120,12 @@ export default function Traffic() {
             </div>
           </>
         ) : (
-          <IntersectionDetailView intersection={selectedIntersection} roads={state.roads} onBack={backToMap} />
+          <IntersectionDetailView
+            intersection={selectedIntersection}
+            roads={state.roads}
+            onBack={backToMap}
+            mlDetectionApiUrl={aiApiUrl}
+          />
         )}
       </GlassPanel>
     </AppLayout>

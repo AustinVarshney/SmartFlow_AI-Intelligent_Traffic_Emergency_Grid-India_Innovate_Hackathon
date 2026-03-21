@@ -31,6 +31,8 @@ export interface SimRoadState {
   signalTimeLeft: number;
   vehicles: SimVehicle[];
   vehicleCount: number;
+  detectionCount: number;
+  waitingTime: number;
   ambulanceDetected: boolean;
 }
 

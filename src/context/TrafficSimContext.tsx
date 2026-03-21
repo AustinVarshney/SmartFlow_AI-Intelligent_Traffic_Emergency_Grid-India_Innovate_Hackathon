@@ -14,6 +14,7 @@ interface TrafficSimContextValue {
   state: TrafficSimState;
   selectedIntersection: SimIntersection | null;
   setIntersectionsFromApi: (intersections: Intersection[]) => void;
+  updateLaneDetectionCount: (laneIndex: number, count: number) => void;
   selectIntersection: (intersectionId: string) => void;
   backToMap: () => void;
 }
@@ -30,6 +31,15 @@ interface RoadUpdateResult {
 
 const GREEN_DURATION = 25;
 const YELLOW_DURATION = 3;
+const ENHANCED_BASE_TIME = 10;
+const ENHANCED_FACTOR = 2.0;
+const ENHANCED_MIN_GREEN = 10;
+const ENHANCED_MAX_GREEN = 60;
+const ENHANCED_W1 = 1.0;
+const ENHANCED_W2 = 1.0;
+const ENHANCED_WAIT_SCALE = 0.1;
+const ENHANCED_MAX_WAIT = 300;
+const ENHANCED_STARVATION_THRESHOLD = 180;
 const ENABLE_ROAD_TRANSFERS = false;
 const OUTGOING_ENTRY_ZONE = 0.12;
 const OUTGOING_ENTRY_SPEED_FACTOR = 0.72;
@@ -92,7 +102,7 @@ const TrafficSimContext = createContext<TrafficSimContextValue | null>(null);
 
 function randomVehicleType(): VehicleType {
   const n = Math.random();
-  if (n < 0.15) return "ambulance";
+  if (n < 0.05) return "ambulance";
   if (n < 0.20) return "bus";
   if (n < 0.46) return "bike";
   return "car";
@@ -154,16 +164,108 @@ function createSignalController(): SignalControllerState {
 
 function createRoads(): SimRoadState[] {
   return ["Lane 1", "Lane 2", "Lane 3", "Lane 4"].map((label, index) => {
+    const vehicles = createSeedVehicles(6 + Math.floor(Math.random() * 3));
     return {
       id: `road-${index + 1}`,
       label,
       signal: index === 0 ? "green" : "red",
       signalTimeLeft: index === 0 ? GREEN_DURATION : 0,
-      vehicles: createSeedVehicles(6 + Math.floor(Math.random() * 3)),
+      vehicles,
       vehicleCount: 0,
+      detectionCount: vehicles.filter((v) => !v.isOutgoing).length,
+      waitingTime: index === 0 ? 0 : 5,
       ambulanceDetected: false,
     };
   });
+}
+
+function computePriority(road: SimRoadState) {
+  const scaledWait = Math.min(road.waitingTime, ENHANCED_MAX_WAIT) * ENHANCED_WAIT_SCALE;
+  return road.detectionCount * ENHANCED_W1 + scaledWait * ENHANCED_W2;
+}
+
+function selectNextLaneEnhanced(roads: SimRoadState[], currentActiveIndex: number) {
+  const starvingCandidates = roads
+    .map((road, index) => ({ road, index }))
+    .filter(({ road }) => road.detectionCount > 0 && road.waitingTime >= ENHANCED_STARVATION_THRESHOLD);
+
+  if (starvingCandidates.length > 0) {
+    return starvingCandidates.reduce((max, item) => (item.road.waitingTime > max.road.waitingTime ? item : max)).index;
+  }
+
+  const withTraffic = roads
+    .map((road, index) => ({ road, index, priority: computePriority(road) }))
+    .filter(({ road }) => road.detectionCount > 0);
+
+  if (withTraffic.length === 0) {
+    return (currentActiveIndex + 1) % roads.length;
+  }
+
+  return withTraffic.reduce((max, item) => (item.priority > max.priority ? item : max)).index;
+}
+
+function computeGreenDurationByDetections(detectionCount: number) {
+  const dynamic = ENHANCED_BASE_TIME + detectionCount * ENHANCED_FACTOR;
+  return Math.max(ENHANCED_MIN_GREEN, Math.min(ENHANCED_MAX_GREEN, Math.round(dynamic)));
+}
+
+function estimateTimeUntilGreen(targetRoadIndex: number, controller: SignalControllerState, roads: SimRoadState[]) {
+  if (controller.activeRoadIndex === targetRoadIndex && controller.phase === "green") {
+    return 0;
+  }
+
+  let elapsed = 0;
+  let simController: SignalControllerState = { ...controller };
+  let simRoads = roads.map((road) => ({ ...road }));
+
+  // Small bounded simulation horizon is enough for 4-lane intersection.
+  const maxTransitions = roads.length * 8;
+
+  for (let step = 0; step < maxTransitions; step += 1) {
+    if (simController.activeRoadIndex === targetRoadIndex && simController.phase === "green") {
+      return elapsed;
+    }
+
+    if (simController.phase === "green") {
+      const dt = simController.timeLeft + YELLOW_DURATION;
+      elapsed += dt;
+
+      simRoads = simRoads.map((road, index) => {
+        if (index === simController.activeRoadIndex) {
+          return { ...road, waitingTime: 0 };
+        }
+        return { ...road, waitingTime: Math.min(ENHANCED_MAX_WAIT, road.waitingTime + dt) };
+      });
+
+      const nextRoadIndex = selectNextLaneEnhanced(simRoads, simController.activeRoadIndex);
+      const nextGreenDuration = computeGreenDurationByDetections(simRoads[nextRoadIndex]?.detectionCount ?? 0);
+      simController = {
+        activeRoadIndex: nextRoadIndex,
+        phase: "green",
+        timeLeft: nextGreenDuration,
+      };
+      continue;
+    }
+
+    // If current phase is yellow, finish yellow then select next green.
+    elapsed += simController.timeLeft;
+    simRoads = simRoads.map((road, index) => {
+      if (index === simController.activeRoadIndex) {
+        return { ...road, waitingTime: 0 };
+      }
+      return { ...road, waitingTime: Math.min(ENHANCED_MAX_WAIT, road.waitingTime + simController.timeLeft) };
+    });
+
+    const nextRoadIndex = selectNextLaneEnhanced(simRoads, simController.activeRoadIndex);
+    const nextGreenDuration = computeGreenDurationByDetections(simRoads[nextRoadIndex]?.detectionCount ?? 0);
+    simController = {
+      activeRoadIndex: nextRoadIndex,
+      phase: "green",
+      timeLeft: nextGreenDuration,
+    };
+  }
+
+  return elapsed;
 }
 
 function applySignalController(roads: SimRoadState[], controller: SignalControllerState): SimRoadState[] {
@@ -184,7 +286,11 @@ function applySignalController(roads: SimRoadState[], controller: SignalControll
     return {
       ...road,
       signal,
-      signalTimeLeft: isActiveRoad ? controller.timeLeft : 0,
+      signalTimeLeft: isActiveRoad
+        ? controller.phase === "green"
+          ? controller.timeLeft + YELLOW_DURATION
+          : controller.timeLeft
+        : estimateTimeUntilGreen(index, controller, roads),
     };
   });
 }
@@ -213,6 +319,31 @@ function tickSignalController(controller: SignalControllerState, dt: number, lan
     activeRoadIndex: nextRoadIndex,
     phase: "green",
     timeLeft: GREEN_DURATION,
+  };
+}
+
+function tickSignalControllerEnhanced(controller: SignalControllerState, dt: number, roads: SimRoadState[]): SignalControllerState {
+  const timeLeft = controller.timeLeft - dt;
+
+  if (timeLeft > 0) {
+    return { ...controller, timeLeft };
+  }
+
+  if (controller.phase === "green") {
+    return {
+      ...controller,
+      phase: "yellow",
+      timeLeft: YELLOW_DURATION,
+    };
+  }
+
+  const nextRoadIndex = selectNextLaneEnhanced(roads, controller.activeRoadIndex);
+  const nextGreenDuration = computeGreenDurationByDetections(roads[nextRoadIndex]?.detectionCount ?? 0);
+
+  return {
+    activeRoadIndex: nextRoadIndex,
+    phase: "green",
+    timeLeft: nextGreenDuration,
   };
 }
 
@@ -435,6 +566,7 @@ function updateRoad(
       ...road,
       vehicles: finalVehicles,
       vehicleCount: road.vehicleCount + enteredNow,
+      detectionCount: road.detectionCount,
       ambulanceDetected: finalVehicles.some((v) => v.type === "ambulance"),
     },
     transfers,
@@ -512,6 +644,19 @@ export function TrafficSimProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
+  const updateLaneDetectionCount = useCallback((laneIndex: number, count: number) => {
+    setState((prev) => ({
+      ...prev,
+      roads: prev.roads.map((road, index) => {
+        if (index !== laneIndex) return road;
+        return {
+          ...road,
+          detectionCount: Math.max(0, count),
+        };
+      }),
+    }));
+  }, []);
+
   const selectIntersection = useCallback((intersectionId: string) => {
     setState((prev) => {
       // DON'T reset roads/controller - just change the selected ID
@@ -571,8 +716,16 @@ export function TrafficSimProvider({ children }: { children: ReactNode }) {
 
     const advanceState = (prev: TrafficSimState, dt: number): TrafficSimState => {
       const currentSelected = prev.intersections.find((item) => item.id === prev.selectedIntersectionId);
-      const nextController = tickSignalController(prev.signalController, dt, prev.roads.length || 4);
-      const roadsWithSignals = applySignalController(prev.roads, nextController);
+      const roadsWithWait = prev.roads.map((road, index) => {
+        const isActive = index === prev.signalController.activeRoadIndex;
+        if (isActive && prev.signalController.phase === "green") {
+          return { ...road, waitingTime: 0 };
+        }
+        return { ...road, waitingTime: Math.min(ENHANCED_MAX_WAIT, road.waitingTime + dt) };
+      });
+
+      const nextController = tickSignalControllerEnhanced(prev.signalController, dt, roadsWithWait);
+      const roadsWithSignals = applySignalController(roadsWithWait, nextController);
       const density = currentSelected?.density || "medium";
 
       const laneCount = roadsWithSignals.length || 4;
@@ -617,10 +770,11 @@ export function TrafficSimProvider({ children }: { children: ReactNode }) {
       state,
       selectedIntersection,
       setIntersectionsFromApi,
+      updateLaneDetectionCount,
       selectIntersection,
       backToMap,
     }),
-    [state, selectedIntersection, setIntersectionsFromApi, selectIntersection, backToMap],
+    [state, selectedIntersection, setIntersectionsFromApi, updateLaneDetectionCount, selectIntersection, backToMap],
   );
 
   return <TrafficSimContext.Provider value={value}>{children}</TrafficSimContext.Provider>;
