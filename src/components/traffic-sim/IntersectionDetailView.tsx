@@ -17,22 +17,23 @@ export function IntersectionDetailView({ intersection, roads, onBack, mlDetectio
   const { updateLaneDetectionCount } = useTrafficSim();
   const [enableMLDetection, setEnableMLDetection] = useState(false);
   const [detectionCounts, setDetectionCounts] = useState<Map<number, number>>(new Map());
-  const [boxedFrames, setBoxedFrames] = useState<Map<number, string>>(new Map());
+  const [detectionOverlays, setDetectionOverlays] = useState<
+    Map<number, { detections: Array<{ type: string; bbox: number[] }>; frameWidth: number; frameHeight: number }>
+  >(new Map());
   const [apiStatus, setApiStatus] = useState<"idle" | "checking" | "connected" | "error">("idle");
   const [requestCount, setRequestCount] = useState(0);
   const [lastPollTime, setLastPollTime] = useState<string>("-");
   const canvasRefsMap = useRef<Map<number, HTMLCanvasElement>>(new Map());
   const processingRef = useRef<boolean>(false);
   const frameCounterRef = useRef<Map<number, number>>(new Map());
-  const FRAME_SKIP = 8; // Process every 4th frame (75% reduction in inference calls)
+  const FRAME_SKIP = 2; // Process every 4th frame (75% reduction in inference calls)
 
   // Fetch detections from all cameras
   useEffect(() => {
     if (!enableMLDetection) {
-      canvasRefsMap.current.clear();
       frameCounterRef.current.clear();
       setDetectionCounts(new Map());
-      setBoxedFrames(new Map());
+      setDetectionOverlays(new Map());
       setApiStatus("idle");
       setRequestCount(0);
       setLastPollTime("-");
@@ -82,7 +83,7 @@ export function IntersectionDetailView({ intersection, roads, onBack, mlDetectio
               const response = await fetch(`${mlDetectionApiUrl}/detect-annotated`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ image: base64String }),
+                body: JSON.stringify({ image: base64String, camera_id: cameraIndex }),
               });
 
               if (!response.ok) return;
@@ -101,13 +102,15 @@ export function IntersectionDetailView({ intersection, roads, onBack, mlDetectio
                   return newMap;
                 });
 
-                if (typeof result.annotated_image === "string" && result.annotated_image.length > 0) {
-                  setBoxedFrames((prev) => {
-                    const newMap = new Map(prev);
-                    newMap.set(cameraIndex, `data:image/jpeg;base64,${result.annotated_image}`);
-                    return newMap;
+                setDetectionOverlays((prev) => {
+                  const newMap = new Map(prev);
+                  newMap.set(cameraIndex, {
+                    detections: result.detections,
+                    frameWidth: result.frame_width ?? canvas.width,
+                    frameHeight: result.frame_height ?? canvas.height,
                   });
-                }
+                  return newMap;
+                });
               }
             } catch (e) {
               setApiStatus("error");
@@ -209,7 +212,7 @@ export function IntersectionDetailView({ intersection, roads, onBack, mlDetectio
                   cameraIndex={index}
                   cameraLabel={`Lane ${index + 1}`}
                   showDetectionOverlay={enableMLDetection}
-                  boxedFrameSrc={boxedFrames.get(index)}
+                  detectionOverlay={detectionOverlays.get(index)}
                   ambulanceDetected={road.ambulanceDetected}
                   onCanvasReady={(canvas) => {
                     canvasRefsMap.current.set(index, canvas);

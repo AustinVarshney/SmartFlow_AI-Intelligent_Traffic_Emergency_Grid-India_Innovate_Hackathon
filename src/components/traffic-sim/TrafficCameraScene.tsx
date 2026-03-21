@@ -8,7 +8,11 @@ interface TrafficCameraSceneProps {
   cameraLabel: string;
   onCanvasReady?: (canvas: HTMLCanvasElement) => void;
   showDetectionOverlay?: boolean;
-  boxedFrameSrc?: string;
+  detectionOverlay?: {
+    detections: Array<{ type: string; bbox: number[] }>;
+    frameWidth: number;
+    frameHeight: number;
+  };
   ambulanceDetected?: boolean;
 }
 
@@ -55,7 +59,7 @@ export function TrafficCameraScene({
   cameraLabel,
   onCanvasReady,
   showDetectionOverlay = false,
-  boxedFrameSrc,
+  detectionOverlay,
   ambulanceDetected = false,
 }: TrafficCameraSceneProps) {
   const focusRoad = roads[cameraIndex] ?? roads[0];
@@ -145,13 +149,28 @@ export function TrafficCameraScene({
           <Scene roads={roadsForRender} cameraPose={cameraPose} />
         </Canvas>
 
-        {showDetectionOverlay && boxedFrameSrc && (
-          <img
-            src={boxedFrameSrc}
-            alt="AI boxed frame"
-            className="absolute inset-0 z-20 h-full w-full object-fill pointer-events-none"
-          />
-        )}
+        {showDetectionOverlay &&
+          detectionOverlay &&
+          detectionOverlay.frameWidth > 0 &&
+          detectionOverlay.frameHeight > 0 &&
+          detectionOverlay.detections.map((detection, idx) => {
+            const [x1, y1, x2, y2] = detection.bbox;
+            const left = `${(x1 / detectionOverlay.frameWidth) * 100}%`;
+            const top = `${(y1 / detectionOverlay.frameHeight) * 100}%`;
+            const width = `${((x2 - x1) / detectionOverlay.frameWidth) * 100}%`;
+            const height = `${((y2 - y1) / detectionOverlay.frameHeight) * 100}%`;
+            const isEmergency = detection.type === "emergency";
+
+            return (
+              <div
+                key={`det-${cameraIndex}-${idx}-${x1}-${y1}-${x2}-${y2}`}
+                className={`absolute z-20 pointer-events-none border-2 ${
+                  isEmergency ? "border-red-500" : "border-green-500"
+                }`}
+                style={{ left, top, width, height }}
+              />
+            );
+          })}
 
         <div className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(to_bottom,rgba(148,163,184,0.07)_0px,rgba(148,163,184,0.07)_1px,transparent_1px,transparent_3px)]" />
         <div className="animate-scanline pointer-events-none absolute inset-0 bg-linear-to-b from-cyan-200/0 via-cyan-100/10 to-cyan-200/0" />
