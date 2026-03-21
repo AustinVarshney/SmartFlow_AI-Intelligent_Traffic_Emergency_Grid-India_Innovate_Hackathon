@@ -1,6 +1,6 @@
-import { Canvas } from "@react-three/fiber";
-import type { SignalState, SimRoadState } from "@/types/traffic-sim";
 import { IntersectionWorld, type IntersectionCameraPose } from "@/components/traffic-sim/Intersection3DEnvironment";
+import type { SignalState, SimRoadState } from "@/types/traffic-sim";
+import { Canvas } from "@react-three/fiber";
 
 interface TrafficCameraSceneProps {
   roads: SimRoadState[];
@@ -153,13 +153,21 @@ export function TrafficCameraScene({
           detectionOverlay &&
           detectionOverlay.frameWidth > 0 &&
           detectionOverlay.frameHeight > 0 &&
-          detectionOverlay.detections.map((detection, idx) => {
-            const [x1, y1, x2, y2] = detection.bbox;
+          detectionOverlay.detections?.map((detection, idx) => {
+            // Handle both bbox array and individual x1,y1,x2,y2 properties
+            const bbox = detection.bbox || [detection.x1 || 0, detection.y1 || 0, detection.x2 || 0, detection.y2 || 0];
+            const [x1, y1, x2, y2] = bbox;
+
+            // Skip invalid bounding boxes
+            if (!x1 && !y1 && !x2 && !y2) {
+              return null;
+            }
+
             const left = `${(x1 / detectionOverlay.frameWidth) * 100}%`;
             const top = `${(y1 / detectionOverlay.frameHeight) * 100}%`;
             const width = `${((x2 - x1) / detectionOverlay.frameWidth) * 100}%`;
             const height = `${((y2 - y1) / detectionOverlay.frameHeight) * 100}%`;
-            const isEmergency = detection.type === "emergency";
+            const isEmergency = detection.type === "emergency" || detection.class_name === "emergency";
 
             return (
               <div

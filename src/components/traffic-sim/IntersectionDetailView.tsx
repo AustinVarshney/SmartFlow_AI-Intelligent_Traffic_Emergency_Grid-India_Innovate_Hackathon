@@ -80,6 +80,14 @@ export function IntersectionDetailView({ intersection, roads, onBack, mlDetectio
               const imageData = canvas.toDataURL("image/jpeg", 0.7);
               const base64String = imageData.split(",")[1];
 
+              // Send to dashboard integration endpoint (async, fire-and-forget)
+              // This allows the integration script to pick up detections for the main dashboard
+              fetch(`${mlDetectionApiUrl}/submit-frame-base64/${cameraIndex}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ image: base64String }),
+              }).catch(() => {/* Ignore errors - integration is optional */});
+
               const response = await fetch(`${mlDetectionApiUrl}/detect-annotated`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -98,7 +106,12 @@ export function IntersectionDetailView({ intersection, roads, onBack, mlDetectio
                   const newMap = new Map(prev);
                   const frameCount = result.detection_count ?? 0;
                   newMap.set(cameraIndex, frameCount);
-                  updateLaneDetectionCount(cameraIndex, frameCount);
+
+                  // Update lane detection count asynchronously to avoid render conflicts
+                  setTimeout(() => {
+                    updateLaneDetectionCount(cameraIndex, frameCount);
+                  }, 0);
+
                   return newMap;
                 });
 
@@ -139,7 +152,7 @@ export function IntersectionDetailView({ intersection, roads, onBack, mlDetectio
       <div className="flex items-center justify-between">
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-white/20 bg-black/35 hover:bg-black/50 transition-colors text-sm font-medium"
+          className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 rounded-md border border-white/20 bg-black/35 hover:bg-black/50 transition-colors text-sm font-medium"
         >
           <ArrowLeft className="w-4 h-4" />
           Back To City Map
