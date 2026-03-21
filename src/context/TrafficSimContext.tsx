@@ -102,9 +102,9 @@ const TrafficSimContext = createContext<TrafficSimContextValue | null>(null);
 
 function randomVehicleType(): VehicleType {
   const n = Math.random();
-  if (n < 0.05) return "ambulance";
-  if (n < 0.20) return "bus";
-  if (n < 0.46) return "bike";
+  if (n < 0.10) return "ambulance";
+  if (n < 0.80) return "bus";
+  if (n < 0.10) return "bike";
   return "car";
 }
 

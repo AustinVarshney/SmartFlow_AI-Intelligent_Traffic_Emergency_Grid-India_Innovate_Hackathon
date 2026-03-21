@@ -1,22 +1,20 @@
-import { CityMap } from "@/components/CityMap";
 import { GlassPanel } from "@/components/GlassPanel";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { StatCard } from "@/components/StatCard";
 import {
-    useLiveDashboardStats,
-    useLiveEmergencyEvents,
-    useLiveIntersections,
-    useLiveTrafficHistory
+  useLiveDashboardStats,
+  useLiveEmergencyEvents,
+  useLiveIntersections,
+  useLiveTrafficHistory
 } from "@/hooks/use-smartflow";
 import { cn, formatNumber } from "@/lib/utils";
 import { format } from "date-fns";
 import {
-    Activity,
-    AlertTriangle,
-    ArrowUpRight,
-    Car,
-    MapPin,
-    Zap
+  Activity,
+  AlertTriangle,
+  Car,
+  MapPin,
+  Zap
 } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
@@ -63,7 +61,7 @@ export default function Dashboard() {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 gap-6 mb-8">
         {/* Main Chart */}
         <GlassPanel className="lg:col-span-2 p-6 flex flex-col">
           <div className="flex justify-between items-center mb-6">
@@ -75,7 +73,7 @@ export default function Dashboard() {
               <p className="text-xs text-muted-foreground font-mono mt-1">Vehicles per minute across all sectors</p>
             </div>
           </div>
-          <div className="flex-1 min-h-[300px]">
+          <div className="flex-1 min-h-100">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={history?.data || []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
@@ -118,7 +116,7 @@ export default function Dashboard() {
           </div>
         </GlassPanel>
 
-        {/* Live Map Preview */}
+        {/* Live Map Preview
         <GlassPanel className="p-6 flex flex-col">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-lg font-display font-semibold">CITY GRID</h2>
@@ -133,7 +131,7 @@ export default function Dashboard() {
               <div className="animate-pulse w-full aspect-square bg-white/5 rounded-xl border border-white/10" />
             )}
           </div>
-        </GlassPanel>
+        </GlassPanel> */}
       </div>
 
       {/* Events Log */}
