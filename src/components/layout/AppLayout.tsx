@@ -56,7 +56,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
               <Bell className="w-5 h-5 text-muted-foreground" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full shadow-[0_0_8px_rgba(255,42,42,0.8)]" />
             </button>
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-secondary p-[1px]">
+            <div className="w-8 h-8 rounded-full bg-linear-to-tr from-primary to-secondary p-px">
               <div className="w-full h-full bg-background rounded-full flex items-center justify-center">
                 <User className="w-4 h-4 text-foreground" />
               </div>

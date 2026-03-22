@@ -1,18 +1,19 @@
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { TrafficSimProvider } from "@/context/TrafficSimContext";
+import { Toaster } from "./components/ui/toaster";
+import { TooltipProvider } from "./components/ui/tooltip";
+import { TrafficSimProvider } from "./context/TrafficSimContext";
 
-import Dashboard from "@/pages/dashboard";
-import Traffic from "@/pages/traffic";
-import Signals from "@/pages/signals";
-import Emergency from "@/pages/emergency";
-// import Simulations from "@/pages/simulations";
-import Analytics from "@/pages/analytics";
-import Dataset from "@/pages/dataset";
-import Settings from "@/pages/settings";
-import NotFound from "@/pages/not-found";
+import Dashboard from "./pages/dashboard";
+import Traffic from "./pages/traffic";
+import Signals from "./pages/signals";
+import Emergency from "./pages/emergency";
+// import Simulations from "./pages/simulations";
+import Analytics from "./pages/analytics";
+import Dataset from "./pages/dataset";
+import Settings from "./pages/settings";
+import NotFound from "./pages/not-found";
+import LandingPage from "./pages/LandingPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,7 +27,8 @@ const queryClient = new QueryClient({
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Dashboard} />
+      <Route path="/" component={LandingPage} />
+      <Route path="/dashboard" component={Dashboard} />
       <Route path="/traffic" component={Traffic} />
       <Route path="/signals" component={Signals} />
       <Route path="/emergency" component={Emergency} />

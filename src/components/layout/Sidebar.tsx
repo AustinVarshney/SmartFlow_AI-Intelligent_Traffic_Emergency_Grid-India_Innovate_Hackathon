@@ -1,19 +1,19 @@
-import { Link, useLocation } from "wouter";
+import { cn } from "@/lib/utils";
 import {
-  LayoutDashboard,
-  Video,
-  TrafficCone,
   Ambulance,
+  Database,
+  Hexagon,
+  LayoutDashboard,
   // Boxes,
   LineChart,
   Settings,
-  Hexagon,
-  Database
+  TrafficCone,
+  Video
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Link, useLocation } from "wouter";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/traffic", label: "Live Traffic", icon: Video },
   { href: "/signals", label: "Signal Control", icon: TrafficCone },
   { href: "/emergency", label: "Emergency Grid", icon: Ambulance },
@@ -38,17 +38,19 @@ export function Sidebar({ onExpandedChange, isExpanded = true }: SidebarProps) {
         isExpanded ? "w-64" : "w-20"
       )}
     >
-      <div className="p-5 flex items-center justify-center h-[88px]">
+      <div className="p-5 flex items-center justify-center h-22">
         <div className="flex items-center gap-3 w-full">
-          <div className="relative flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 border border-primary/30 flex-shrink-0">
+          <div className="relative flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 border border-primary/30 shrink-0">
             <Hexagon className="w-6 h-6 text-primary absolute animate-pulse-border" />
             <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
           </div>
           {isExpanded && (
-            <div className="overflow-hidden whitespace-nowrap">
-              <h1 className="font-display font-bold text-lg tracking-widest text-glow leading-none">SMARTFLOW</h1>
-              <p className="text-[10px] text-primary/60 font-mono tracking-widest">AI OPTIMIZER</p>
-            </div>
+            <Link to="/dashboard">
+              <div className="overflow-hidden whitespace-nowrap">
+                <h1 className="font-display font-bold text-lg tracking-widest text-glow leading-none">SMARTFLOW</h1>
+                <p className="text-[10px] text-primary/60 font-mono tracking-widest">AI OPTIMIZER</p>
+              </div>
+            </Link>
           )}
         </div>
       </div>
