@@ -1,24 +1,24 @@
 import { GlassPanel } from "@/components/GlassPanel";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { StatCard } from "@/components/StatCard";
-import {
-  useLiveDashboardStats,
-  useLiveEmergencyEvents,
-  useLiveIntersections,
-  useLiveTrafficHistory
-} from "@/hooks/use-smartflow";
 import { useTrafficSim } from "@/context/TrafficSimContext";
+import {
+    useLiveDashboardStats,
+    useLiveEmergencyEvents,
+    useLiveIntersections,
+    useLiveTrafficHistory
+} from "@/hooks/use-smartflow";
 import { cn, formatNumber } from "@/lib/utils";
 import { format } from "date-fns";
 import {
-  Activity,
-  AlertTriangle,
-  Car,
-  MapPin,
-  Zap
+    Activity,
+    AlertTriangle,
+    Car,
+    MapPin,
+    Zap
 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { useState, useEffect, useRef } from "react";
 
 // Persistent storage keys
 const CHART_STORAGE_KEY = 'traffic-density-history';
@@ -237,17 +237,17 @@ export default function Dashboard() {
               <h2 className="text-lg font-display font-semibold flex items-center gap-2">
                 <Zap className="w-4 h-4 text-primary" />
                 NETWORK DENSITY TREND
-                <span className="text-xs font-mono text-primary/80">(LIVE - Recent 10)</span>
+                <span className="text-xs font-mono text-primary/80">(LIVE - Recent 30 Min)</span>
               </h2>
-              <p className="text-xs text-muted-foreground font-mono mt-1">Vehicles detected across all camera feeds (2s intervals)</p>
+              <p className="text-xs text-muted-foreground font-mono mt-1">Vehicles detected across all camera feeds (1-min intervals)</p>
             </div>
             <div className="text-xs font-mono text-muted-foreground">
-              Data Points: {densityHistory.length}/10
+              Data Points: {densityHistory.length}/30
             </div>
           </div>
           <div className="flex-1 min-h-100">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={densityHistory} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <AreaChart data={densityHistory} margin={{ top: 10, right: 10, left: -20, bottom: 50 }}>
                 <defs>
                   <linearGradient id="colorVehicles" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
@@ -259,12 +259,12 @@ export default function Dashboard() {
                   dataKey="time"
                   stroke="hsl(var(--muted-foreground))"
                   fontSize={10}
-                  tickFormatter={(val) => val.split(':').slice(1).join(':')} // Show MM:SS only
                   tickLine={false}
                   axisLine={false}
-                  angle={-45}
-                  textAnchor="end"
-                  height={60}
+                  interval={Math.max(0, Math.floor(densityHistory.length / 6) - 1)}
+                  angle={-0}
+                  textAnchor="middle"
+                  height={30}
                 />
                 <YAxis
                   stroke="hsl(var(--muted-foreground))"

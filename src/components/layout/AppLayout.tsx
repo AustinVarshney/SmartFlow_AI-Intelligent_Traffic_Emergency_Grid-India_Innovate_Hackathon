@@ -1,8 +1,7 @@
-import { ReactNode } from "react";
-import { useState, useEffect } from "react";
-import { Sidebar } from "./Sidebar";
-import { Bell, Search, User, Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
+import { Bell, Menu, User, X } from "lucide-react";
+import { ReactNode, useEffect, useState } from "react";
+import { Sidebar } from "./Sidebar";
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(() => {
@@ -41,7 +40,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
               )}
             </button>
 
-            {/* Search Bar */}
+            {/* Search Bar
             <div className="flex items-center bg-black/40 border border-white/10 rounded-full px-4 py-1.5 w-64 focus-within:border-primary/50 transition-colors">
               <Search className="w-4 h-4 text-muted-foreground mr-2" />
               <input
@@ -49,7 +48,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 placeholder="Search intersection..."
                 className="bg-transparent border-none outline-none text-sm w-full font-mono placeholder:text-muted-foreground/50"
               />
-            </div>
+            </div> */}
           </div>
 
           <div className="flex items-center gap-4">

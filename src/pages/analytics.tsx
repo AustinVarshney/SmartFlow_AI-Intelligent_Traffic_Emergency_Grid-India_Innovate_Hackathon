@@ -75,7 +75,7 @@ export default function Analytics() {
 
   // Enhanced historical data with predictions
   const enhancedHistoricalData = useMemo(() => {
-    const historical = trafficHistory?.data?.slice(-10) || [];
+    const historical = trafficHistory?.data?.slice(-30) || [];
     return [...historical.map(d => ({ ...d, isPrediction: false })), ...predictions];
   }, [trafficHistory, predictions]);
 
@@ -370,6 +370,7 @@ export default function Analytics() {
             <h2 className="text-lg font-display font-semibold text-white/90 flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-primary" />
               TRAFFIC TRENDS + ML FORECAST
+              <span className="text-xs font-mono text-primary/80">(Recent 30 Min)</span>
             </h2>
             <div className="flex items-center gap-2">
               <button
@@ -386,9 +387,17 @@ export default function Analytics() {
           <div className="h-[320px]">
             {enhancedHistoricalData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={enhancedHistoricalData}>
+                <LineChart data={enhancedHistoricalData} margin={{ top: 10, right: 30, left: -20, bottom: 30 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
-                  <XAxis dataKey="time" stroke="hsl(var(--muted-foreground))" fontSize={10} tickLine={false} />
+                  <XAxis
+                    dataKey="time"
+                    stroke="hsl(var(--muted-foreground))"
+                    fontSize={10}
+                    tickLine={false}
+                    interval={Math.max(0, Math.floor(enhancedHistoricalData.length / 6) - 1)}
+                    angle={0}
+                    textAnchor="middle"
+                  />
                   <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
                   <Tooltip
                     contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
