@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
 import {
-  Ambulance,
   Database,
   Hexagon,
   LayoutDashboard,
@@ -16,7 +15,7 @@ const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/traffic", label: "Live Traffic", icon: Video },
   { href: "/signals", label: "Signal Control", icon: TrafficCone },
-  { href: "/emergency", label: "Emergency Grid", icon: Ambulance },
+  // { href: "/emergency", label: "Emergency Grid", icon: Ambulance },
   // { href: "/simulations", label: "Simulations", icon: Boxes },
   { href: "/analytics", label: "Analytics", icon: LineChart },
   { href: "/dataset", label: "AI Model", icon: Database },
@@ -45,7 +44,7 @@ export function Sidebar({ onExpandedChange, isExpanded = true }: SidebarProps) {
             <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
           </div>
           {isExpanded && (
-            <Link to="/dashboard">
+            <Link to="/">
               <div className="overflow-hidden whitespace-nowrap">
                 <h1 className="font-display font-bold text-lg tracking-widest text-glow leading-none">SMARTFLOW</h1>
                 <p className="text-[10px] text-primary/60 font-mono tracking-widest">AI OPTIMIZER</p>
