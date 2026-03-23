@@ -1,11 +1,11 @@
-import { AppLayout } from "@/components/layout/AppLayout";
 import { GlassPanel } from "@/components/GlassPanel";
+import { AppLayout } from "@/components/layout/AppLayout";
 import { TrafficLight } from "@/components/TrafficLight";
-import { useLiveCongestionAnalytics } from "@/hooks/use-smartflow";
 import { useTrafficSim } from "@/context/TrafficSimContext";
+import { useLiveCongestionAnalytics } from "@/hooks/use-smartflow";
 import { cn } from "@/lib/utils";
-import { Settings2, AlertTriangle, Clock, BarChart3 } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell } from "recharts";
+import { AlertTriangle, BarChart3, Clock, Settings2 } from "lucide-react";
+import { Bar, BarChart, CartesianGrid, Cell, Tooltip as RechartsTooltip, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 export default function Signals() {
   const { state } = useTrafficSim();
@@ -200,7 +200,7 @@ export default function Signals() {
                     </td>
                     <td className="py-4">
                       {sig.ambulanceDetected && (
-                        <div className="px-2 py-0.5 rounded border border-destructive/50 bg-destructive/20 text-destructive text-[10px] font-mono font-bold flex items-center gap-1">
+                        <div className="px-2 py-0.5 rounded border border-destructive/50 bg-destructive/20 text-destructive text-[10px] font-mono font-bold flex items-center gap-1 w-[80%]">
                           <AlertTriangle className="w-3 h-3" />
                           EMERGENCY
                         </div>
