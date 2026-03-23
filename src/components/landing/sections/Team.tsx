@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { ScrollReveal } from '../ScrollReveal';
+import bhomikVarshneyImage from '../../../assets/bhomik-varshney.jpg';
 
 const teamMembers = [
   {
@@ -17,7 +18,7 @@ const teamMembers = [
   {
     name: 'Bhomik Varshney',
     role: 'AI Developer',
-    avatar: '/placeholder-user.jpg',
+    avatar: bhomikVarshneyImage,
   },
   {
     name: 'Prakhar Saxena',
