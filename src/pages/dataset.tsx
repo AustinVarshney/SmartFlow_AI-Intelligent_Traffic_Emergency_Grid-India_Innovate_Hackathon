@@ -1,15 +1,15 @@
-import { useMemo } from "react";
-import { AppLayout } from "@/components/layout/AppLayout";
 import { GlassPanel } from "@/components/GlassPanel";
-import { useTrafficSim } from "@/context/TrafficSimContext";
-import type { VehicleType } from "@/types/traffic-sim";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment } from "@react-three/drei";
+import { AppLayout } from "@/components/layout/AppLayout";
 import { RealisticAmbulance } from "@/components/vehicles/RealisticAmbulance";
 import { RealisticAuto } from "@/components/vehicles/RealisticAuto";
 import { RealisticBike } from "@/components/vehicles/RealisticBike";
 import { RealisticCar } from "@/components/vehicles/RealisticCar";
-import { Database, Camera, Tag, CarFront, Bus, Bike, Ambulance } from "lucide-react";
+import { useTrafficSim } from "@/context/TrafficSimContext";
+import type { VehicleType } from "@/types/traffic-sim";
+import { Environment } from "@react-three/drei";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Ambulance, Bike, Bus, Camera, CarFront } from "lucide-react";
+import { useMemo } from "react";
 
 const VEHICLE_CLASSES: Array<{
   type: VehicleType;
@@ -107,8 +107,10 @@ export default function Dataset() {
     <AppLayout>
       <div className="mb-8">
         <div>
+          <GlassPanel key={1} className="p-4 border border-white/10">  
           <h1 className="text-3xl font-display font-bold text-foreground mb-2">AI Model Details</h1>
-          <div className="space-y-3 text-sm text-muted-foreground max-w-4xl">
+          <hr/>
+          <div className="space-y-3 text-sm text-muted-foreground mt-4">
             <p>
               Our SmartFlow YOLO-based model, trained on a custom dataset of 300 images, delivers real-time vehicle detection using an optimized asynchronous inference pipeline with fixed frame skipping, ensuring continuous and efficient processing.
             </p>
@@ -119,10 +121,12 @@ export default function Dataset() {
               The model classifies vehicles into two categories: normal vehicles (marked in green) and emergency vehicles (marked in red), enabling intelligent traffic prioritization and responsive urban traffic management.
             </p>
           </div>
+          </GlassPanel>
         </div>
       </div>
 
-      <h1 className="text-2xl font-display font-bold text-foreground mb-2">Vehicle Details</h1>
+<hr/>
+      <h1 className="text-2xl font-display font-bold text-foreground mb-2 mt-6">Vehicle Details</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
         {classStats.map((cls) => {
           const Icon = cls.icon;

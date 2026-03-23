@@ -73,6 +73,12 @@ function signalBadgeClass(signal: SignalState) {
   return "text-rose-200 border-rose-300/40 bg-rose-500/15";
 }
 
+function formatSignalSeconds(seconds: number) {
+  if (!Number.isFinite(seconds)) return "0.0";
+  const normalized = Math.min(300, Math.max(0, seconds));
+  return normalized.toFixed(1);
+}
+
 function Scene({ roads, cameraPose }: { roads: SimRoadState[]; cameraPose: IntersectionCameraPose }) {
   return <IntersectionWorld roads={roads} cameraPose={cameraPose} />;
 }
@@ -148,8 +154,8 @@ export function TrafficCameraScene({
               }
             >
               {focusRoad.signal === "red"
-                ? `To Green ${focusRoad.signalTimeLeft.toFixed(1)}s`
-                : `To Red ${focusRoad.signalTimeLeft.toFixed(1)}s`}
+                ? `To Green ${formatSignalSeconds(focusRoad.signalTimeLeft)}s`
+                : `To Red ${formatSignalSeconds(focusRoad.signalTimeLeft)}s`}
             </span>
           </div>
         </div>

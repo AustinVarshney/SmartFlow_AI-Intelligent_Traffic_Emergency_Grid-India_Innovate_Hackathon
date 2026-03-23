@@ -4,7 +4,6 @@ import { Emergency } from '../components/landing/sections/Emergency';
 import { Footer } from '../components/landing/sections/Footer';
 import { Hero } from '../components/landing/sections/Hero';
 import { HowItWorks } from '../components/landing/sections/HowItWorks';
-import { Innovation } from '../components/landing/sections/Innovation';
 import { Metrics } from '../components/landing/sections/Metrics';
 import { Problem } from '../components/landing/sections/Problem';
 import { Solution } from '../components/landing/sections/Solution';
@@ -35,7 +34,6 @@ export default function Home() {
       <Emergency />
       <Comparison />
       <UseCases />
-      <Innovation />
       <Team />
       <CTA />
       <Footer />

@@ -1,12 +1,12 @@
 import { GlassPanel } from "@/components/GlassPanel";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { useLiveCongestionAnalytics, useLiveDashboardStats, useLiveTrafficHistory } from "@/hooks/use-smartflow";
+import { getSystemSettings, type SystemSettings } from "@/lib/settings-api";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Activity, AlertTriangle, Bell, Brain, Clock, Database, MapPin, RefreshCw, Target, TrendingUp, Zap } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Legend, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { getSystemSettings, type SystemSettings } from "@/lib/settings-api";
 
 // Enhanced analytics with ML predictions and real-time insights
 
@@ -361,7 +361,7 @@ export default function Analytics() {
                     interval={Math.max(0, Math.floor(chartDataWithUniformTime.length / 6) - 1)}
                     angle={0}
                     textAnchor="middle"
-                    label={{ value: 'Time (10-min intervals)', position: 'insideBottom', offset: -8, fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
+                    label={{ value: 'Time (1-hrs intervals)', position: 'insideBottom', offset: -8, fill: 'hsl(var(--muted-foreground))', fontSize: 11 }}
                   />
                   <YAxis
                     stroke="hsl(var(--muted-foreground))"
