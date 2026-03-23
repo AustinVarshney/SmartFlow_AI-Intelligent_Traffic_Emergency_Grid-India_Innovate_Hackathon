@@ -109,6 +109,37 @@ const INCOMING_MIN_GAP = 0.1;
 const OUTGOING_MIN_GAP = 0.18;
 
 const LANE_POSITIONS = [-3, -1, 1, 3];
+const MAX_REASONABLE_SIGNAL_SECONDS = 300;
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function normalizeSeconds(value: number, fallback = 0) {
+  if (!Number.isFinite(value)) return fallback;
+  // Defensive conversion: some integrations may accidentally provide milliseconds.
+  const seconds = value > 1000 ? value / 1000 : value;
+  return clamp(seconds, 0, MAX_REASONABLE_SIGNAL_SECONDS);
+}
+
+function normalizeAlgorithmConfig(nextConfig: AlgorithmConfig): AlgorithmConfig {
+  const minGreen = Math.round(normalizeSeconds(nextConfig.minGreen, ENHANCED_MIN_GREEN));
+  const maxGreenRaw = Math.round(normalizeSeconds(nextConfig.maxGreen, ENHANCED_MAX_GREEN));
+  const maxGreen = Math.max(minGreen, maxGreenRaw);
+
+  return {
+    ...nextConfig,
+    baseTime: clamp(nextConfig.baseTime, 1, maxGreen),
+    factor: clamp(nextConfig.factor, 0.1, 20),
+    minGreen,
+    maxGreen,
+    w1: clamp(nextConfig.w1, 0, 10),
+    w2: clamp(nextConfig.w2, 0, 10),
+    waitScale: clamp(nextConfig.waitScale, 0.01, 10),
+    starvationThreshold: clamp(nextConfig.starvationThreshold, 10, 3600),
+    maxWait: clamp(nextConfig.maxWait, 30, 3600),
+  };
+}
 
 function nearestLaneCenter(offset: number) {
   let nearest = LANE_POSITIONS[0];
@@ -136,7 +167,7 @@ const TrafficSimContext = createContext<TrafficSimContextValue | null>(null);
 
 function randomVehicleType(): VehicleType {
   const n = Math.random();
-  if (n < 0.001) return "ambulance";
+  if (n < 0.01) return "ambulance";
   if (n < 0.80) return "bus";
   if (n < 0.10) return "bike";
   return "car";
@@ -364,7 +395,7 @@ function estimateTimeUntilGreen(targetRoadIndex: number, controller: SignalContr
     }
 
     if (simController.phase === "green") {
-      const dt = simController.timeLeft + YELLOW_DURATION;
+      const dt = normalizeSeconds(simController.timeLeft, 0) + YELLOW_DURATION;
       elapsed += dt;
 
       simRoads = simRoads.map((road, index) => {
@@ -385,12 +416,12 @@ function estimateTimeUntilGreen(targetRoadIndex: number, controller: SignalContr
     }
 
     // If current phase is yellow, finish yellow then select next green.
-    elapsed += simController.timeLeft;
+    elapsed += normalizeSeconds(simController.timeLeft, 0);
     simRoads = simRoads.map((road, index) => {
       if (index === simController.activeRoadIndex) {
         return { ...road, waitingTime: 0 };
       }
-      return { ...road, waitingTime: Math.min(config.maxWait, road.waitingTime + simController.timeLeft) };
+      return { ...road, waitingTime: Math.min(config.maxWait, road.waitingTime + normalizeSeconds(simController.timeLeft, 0)) };
     });
 
     const nextRoadIndex = selectNextLaneEnhanced(simRoads, simController.activeRoadIndex, config);
@@ -402,7 +433,7 @@ function estimateTimeUntilGreen(targetRoadIndex: number, controller: SignalContr
     };
   }
 
-  return elapsed;
+  return clamp(elapsed, 0, MAX_REASONABLE_SIGNAL_SECONDS);
 }
 
 function applySignalController(roads: SimRoadState[], controller: SignalControllerState, config: AlgorithmConfig): SimRoadState[] {
@@ -420,14 +451,16 @@ function applySignalController(roads: SimRoadState[], controller: SignalControll
       signal = "red";
     }
 
+    const signalTimeLeftRaw = isActiveRoad
+      ? controller.phase === "green"
+        ? normalizeSeconds(controller.timeLeft, 0) + YELLOW_DURATION
+        : normalizeSeconds(controller.timeLeft, 0)
+      : estimateTimeUntilGreen(index, controller, roads, config);
+
     return {
       ...road,
       signal,
-      signalTimeLeft: isActiveRoad
-        ? controller.phase === "green"
-          ? controller.timeLeft + YELLOW_DURATION
-          : controller.timeLeft
-        : estimateTimeUntilGreen(index, controller, roads, config),
+      signalTimeLeft: clamp(signalTimeLeftRaw, 0, MAX_REASONABLE_SIGNAL_SECONDS),
     };
   });
 }
@@ -460,7 +493,7 @@ function tickSignalController(controller: SignalControllerState, dt: number, lan
 }
 
 function tickSignalControllerEnhanced(controller: SignalControllerState, dt: number, roads: SimRoadState[], config: AlgorithmConfig): SignalControllerState {
-  const timeLeft = controller.timeLeft - dt;
+  const timeLeft = normalizeSeconds(controller.timeLeft, GREEN_DURATION) - dt;
 
   if (timeLeft > 0) {
     return { ...controller, timeLeft };
@@ -793,7 +826,7 @@ export function TrafficSimProvider({ children }: { children: ReactNode }) {
 
         const traffic = response.data.trafficControl;
         const algo = traffic.algorithm;
-        const nextConfig: AlgorithmConfig = {
+        const nextConfig = normalizeAlgorithmConfig({
           baseTime: algo.baseTime,
           factor: algo.factor,
           minGreen: traffic.minGreenTime,
@@ -804,7 +837,7 @@ export function TrafficSimProvider({ children }: { children: ReactNode }) {
           starvationThreshold: algo.starvationThreshold,
           maxWait: algo.maxWait,
           emergencyOverride: traffic.emergencyOverride,
-        };
+        });
 
         settingsAlgorithmConfigRef.current = nextConfig;
         setAlgorithmConfig((prev) => (areAlgorithmConfigsEqual(prev, nextConfig) ? prev : nextConfig));
