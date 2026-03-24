@@ -1,16 +1,16 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import bhomikVarshneyImage from '../../../assets/bhomik-varshney.jpg';
-import austinVarshneyImage from '../../../assets/austin-varshney.png';
 import aryanParasharImage from '../../../assets/aryan-parashar.jpeg';
+import austinVarshneyImage from '../../../assets/austin-varshney.png';
+import bhomikVarshneyImage from '../../../assets/bhomik-varshney.jpg';
 import prakharSaxenaImage from '../../../assets/prakhar-saxena.jpeg';
 import rupeshVarshneyImage from '../../../assets/rupesh-varshney.jpeg';
 import { ScrollReveal } from '../ScrollReveal';
 
 const teamMembers = [
   {
-    name: 'Rupesh Varshney',
+    name: 'Rupesh Varshney', 
     role: 'Full Stack Developer',
     avatar: rupeshVarshneyImage,
   },

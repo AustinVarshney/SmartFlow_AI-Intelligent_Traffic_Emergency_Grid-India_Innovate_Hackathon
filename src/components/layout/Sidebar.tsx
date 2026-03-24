@@ -15,8 +15,6 @@ const NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/traffic", label: "Live Traffic", icon: Video },
   { href: "/signals", label: "Signal Control", icon: TrafficCone },
-  // { href: "/emergency", label: "Emergency Grid", icon: Ambulance },
-  // { href: "/simulations", label: "Simulations", icon: Boxes },
   { href: "/analytics", label: "Analytics", icon: LineChart },
   { href: "/dataset", label: "AI Model", icon: Database },
   { href: "/settings", label: "Settings", icon: Settings },
@@ -77,7 +75,7 @@ export function Sidebar({ onExpandedChange, isExpanded = true }: SidebarProps) {
                 )}
                 <Icon
                   className={cn(
-                    "w-5 h-5 flex-shrink-0 transition-transform duration-200",
+                    "w-5 h-5 shrink-0 transition-transform duration-200",
                     isActive && "drop-shadow-[0_0_8px_rgba(0,255,255,0.8)]",
                     isExpanded && "group-hover:scale-110"
                   )}

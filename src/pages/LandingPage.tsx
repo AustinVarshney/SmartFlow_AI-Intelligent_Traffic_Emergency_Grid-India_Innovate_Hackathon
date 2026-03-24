@@ -1,8 +1,8 @@
+import HowItWorks from '@/components/landing/sections/HowItWorks';
 import { Comparison } from '../components/landing/sections/Comparison';
 import { CTA } from '../components/landing/sections/CTA';
 import { Footer } from '../components/landing/sections/Footer';
 import { Hero } from '../components/landing/sections/Hero';
-import { HowItWorks } from '../components/landing/sections/HowItWorks';
 import { Metrics } from '../components/landing/sections/Metrics';
 import { Problem } from '../components/landing/sections/Problem';
 import { Solution } from '../components/landing/sections/Solution';
