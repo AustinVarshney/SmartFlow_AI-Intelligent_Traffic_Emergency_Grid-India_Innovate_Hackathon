@@ -143,11 +143,13 @@ export function Hero() {
                   <div className="text-xs text-slate-400 mb-2">{signal}</div>
                   <div
                     className="text-lg font-bold"
+                    title={["Green","Yellow","Red"][i] + ' signal'}
                     style={{
-                      color: i === 0 ? '#22D3EE' : '#64748B',
+                      color: ["#10B981", "#F59E0B", "#EF4444"][i],
                     }}
+                    aria-label={["Green","Yellow","Red"][i] + ' signal'}
                   >
-                    {i === 0 ? '●' : i === 1 ? '●' : '●'}
+                    {'●'}
                   </div>
                 </div>
               ))}
