@@ -65,7 +65,7 @@ export function CTA() {
           </motion.div>
 
           {/* Trust statement */}
-          <motion.p
+          {/* <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -73,7 +73,7 @@ export function CTA() {
             className="text-slate-400 text-sm pt-8"
           >
             Trusted by leading municipalities and smart city initiatives worldwide.
-          </motion.p>
+          </motion.p> */}
         </ScrollReveal>
       </div>
     </section>
