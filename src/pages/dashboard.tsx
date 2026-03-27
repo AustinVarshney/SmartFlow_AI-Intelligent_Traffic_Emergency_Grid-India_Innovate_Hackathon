@@ -616,10 +616,10 @@ export default function Dashboard() {
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-muted-foreground font-mono">Signal</span>
                     <div className="flex items-center gap-2">
-                      <div className="flex gap-1">
-                        <div className={cn("w-2 h-2 rounded-full", road.signal === 'red' ? "bg-destructive" : "bg-muted/30")}></div>
-                        <div className={cn("w-2 h-2 rounded-full", road.signal === 'yellow' ? "bg-warning" : "bg-muted/30")}></div>
-                        <div className={cn("w-2 h-2 rounded-full", road.signal === 'green' ? "bg-success" : "bg-muted/30")}></div>
+                      <div className="flex gap-1 bg-black p-1 rounded-sm">
+                        <div className={cn("w-2 h-2 rounded-full", road.signal === 'red' ? "bg-destructive" : "bg-white/20")}></div>
+                        <div className={cn("w-2 h-2 rounded-full", road.signal === 'yellow' ? "bg-warning" : "bg-white/20")}></div>
+                        <div className={cn("w-2 h-2 rounded-full", road.signal === 'green' ? "bg-success" : "bg-white/20")}></div>
                       </div>
                       <span className={cn(
                         "text-xs font-bold uppercase font-mono px-2 py-0.5 rounded",
