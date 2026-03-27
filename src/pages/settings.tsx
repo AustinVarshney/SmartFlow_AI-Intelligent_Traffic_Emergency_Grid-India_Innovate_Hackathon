@@ -84,7 +84,7 @@ function PullSlider({
 
 export default function Settings() {
   const { toast } = useToast();
-  const [activeSection, setActiveSection] = useState<ActiveSection>('alerts');
+  const [activeSection, setActiveSection] = useState<ActiveSection>('display');
   const [settings, setSettings] = useState<SystemSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -287,9 +287,9 @@ export default function Settings() {
         {/* Settings Navigation */}
         <div className="space-y-2 col-span-1">
           {[
-            { key: 'alerts' as ActiveSection, icon: Bell, label: "Alert Thresholds", desc: "Congestion & Speed Limits" },
-            { key: 'traffic' as ActiveSection, icon: Shield, label: "Traffic Control", desc: "Signal Timing & Emergency" },
             { key: 'display' as ActiveSection, icon: Eye, label: "Dashboard", desc: "Refresh & Visualization" },
+            { key: 'traffic' as ActiveSection, icon: Shield, label: "Traffic Control", desc: "Signal Timing & Emergency" },
+            { key: 'alerts' as ActiveSection, icon: Bell, label: "Alert Thresholds", desc: "Congestion & Speed Limits" },
           ].map((item) => (
              <button
                key={item.key}
