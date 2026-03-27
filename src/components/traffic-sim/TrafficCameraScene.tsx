@@ -74,9 +74,10 @@ function signalBadgeClass(signal: SignalState) {
 }
 
 function formatSignalSeconds(seconds: number) {
-  if (!Number.isFinite(seconds)) return "0.0";
+  if (!Number.isFinite(seconds)) return "0";
   const normalized = Math.min(300, Math.max(0, seconds));
-  return normalized.toFixed(1);
+  // return normalized.toFixed(1);
+  return Math.round(normalized).toString();
 }
 
 function Scene({ roads, cameraPose }: { roads: SimRoadState[]; cameraPose: IntersectionCameraPose }) {
@@ -173,7 +174,8 @@ export function TrafficCameraScene({
                 const MAX_WAIT = algorithmConfig?.maxWait ?? 300;
                 const scaledWait = Math.min(focusRoad.waitingTime, MAX_WAIT) * WAIT_SCALE;
                 const priority = focusRoad.detectionCount * W1 + scaledWait * W2;
-                return priority.toFixed(2);
+                // return priority.toFixed(2);
+                return Math.round(priority).toString();
               })()}</span>
             </div>
 
@@ -186,7 +188,8 @@ export function TrafficCameraScene({
                   : focusRoad.waitingTime > 60
                     ? "text-amber-400 font-bold"
                     : "text-slate-300 font-bold"
-              }>{focusRoad.waitingTime.toFixed(1)}s</span>
+              // }>{focusRoad.waitingTime.toFixed(1)}s</span>
+              }>{Math.round(focusRoad.waitingTime)}s</span>
             </div>
 
             {/* Green Time Calculation */}
@@ -199,7 +202,8 @@ export function TrafficCameraScene({
                 const maxGreen = algorithmConfig?.maxGreen ?? 60;
                 let greenTime = baseTime + (focusRoad.detectionCount * factor);
                 greenTime = Math.max(minGreen, Math.min(maxGreen, greenTime));
-                return greenTime.toFixed(1);
+                // return greenTime.toFixed(1);
+                return Math.round(greenTime).toString();
               })()}s</span>
             </div>
           </div>

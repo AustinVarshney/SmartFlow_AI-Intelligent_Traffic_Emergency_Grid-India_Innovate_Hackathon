@@ -282,12 +282,12 @@ export default function Dashboard() {
             </div>
             <div>
               <h3 className="text-muted-foreground text-xs font-medium tracking-wider mb-2 uppercase font-display">
-                Active Nodes
+                Active Intersection
               </h3>
               <p className="text-5xl font-bold font-display text-glow-success text-foreground mb-1 tracking-tight">
                 {activeIntersections}
               </p>
-              <p className="text-xs text-success font-mono">All systems operational</p>
+              {/* <p className="text-xs text-success font-mono">All systems operational</p> */}
             </div>
           </div>
         </GlassPanel>
