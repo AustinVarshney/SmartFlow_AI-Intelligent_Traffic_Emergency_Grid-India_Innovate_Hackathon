@@ -2,14 +2,6 @@
 
 <div align="center">
 
-**AI-Driven Urban Traffic Orchestration with Real-Time Emergency Response**
-
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-18.3-cyan.svg)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-5.4-purple.svg)](https://vitejs.dev/)
-[![Express](https://img.shields.io/badge/Express-5.0-green.svg)](https://expressjs.com/)
-[![Three.js](https://img.shields.io/badge/Three.js-0.170-black.svg)](https://threejs.org/)
-
 **Team:** Commit and Conquer | **Hackathon:** India Innovates 2026 - Urban Solutions
 
 [Live Demo](https://smart-flow-ai-intelligent-traffic-e.vercel.app/) • [Backend Repo](./SmartFlow_AI_Backend) • [Model Service](./SmartFlow_AI_Model_Service)
@@ -38,7 +30,7 @@
 
 ---
 
-## 🎯 Executive Summary
+## 🎯 Overview
 
 **SmartFlow AI** is a comprehensive AI-driven urban traffic orchestration platform that combines real-time computer vision, adaptive signal control, and emergency-first routing to solve critical urban mobility challenges.
 
@@ -86,7 +78,7 @@ SmartFlow AI implements a **closed-loop traffic management system**:
 - **Dynamic Density Metrics** - Automatic calculation of road congestion (low/medium/high)
 - **Adaptive Signal Control** - Green time allocation based on live traffic patterns
 - **Multi-Intersection Coordination** - 9-intersection grid with synchronized timing
-- **Historical Analytics** - 30-minute rolling window of traffic patterns
+- **Historical Analytics** - Last 5 hrs rolling window of traffic patterns
 
 ### 🚁 Emergency Response System
 - **Automatic Dispatch** - 3 dispatch modes: North-South, East-West, or Random direction
@@ -118,33 +110,33 @@ SmartFlow AI implements a **closed-loop traffic management system**:
 ```
 ┌──────────────────────────────────────────────────────────────────┐
 │                                                                  │
-│                    Frontend (This Repository)                   │
-│              React + Vite + Three.js + Tailwind CSS            │
-│  ┌────────────────────────────────────────────────────────────┐ │
-│  │ Pages:                                                     │ │
-│  │ ├─ Live Traffic    - 4-camera AI detection monitoring     │ │
-│  │ ├─ Simulation      - 3D interactive traffic simulation     │ │
-│  │ ├─ Dashboard       - Statistics & analytics               │ │
-│  │ └─ Settings        - System configuration                 │ │
-│  └────────────────────────────────────────────────────────────┘ │
-│                            │                                    │
-│                            ├─ REST API                         │
-│                            └─ WebSocket (Socket.io)           │
-└────────────────────────────┼──────────────────────────────────┘
+│                           Frontend                               │  
+│              React + Vite + Three.js + Tailwind CSS              │
+│  ┌────────────────────────────────────────────────────────────┐  │
+│  │ Pages:                                                     │  │
+│  │ ├─ Live Traffic    - 4-camera AI detection monitoring      │  │
+│  │ ├─ Simulation      - 3D interactive traffic simulation     │  │
+│  │ ├─ Dashboard       - Statistics & analytics                │  │
+│  │ └─ Settings        - System configuration                  │  │
+│  └────────────────────────────────────────────────────────────┘  │
+│                            │                                     │
+│                            ├─ REST API                           │
+│                            └─ WebSocket (Socket.io)              │
+└────────────────────────────┼─────────────────────────────────────┘ 
                              │
-        ┌────────────────────┴────────────────┬──────────────┐
-        ▼                                     ▼              ▼
-   ┌─────────────┐                  ┌──────────────────┐ ┌──────────┐
-   │  Backend    │                  │  AI Model        │ │ Database │
-   │  (Express)  │────────────────  │  Service (YOLO)  │ │ (Redis)  │
-   │  Port 3000  │  Traffic Logic   │  Port 8000       │ └──────────┘
+        ┌────────────────────┴────────────────┬
+        ▼                                     ▼          
+   ┌─────────────┐                  ┌──────────────────┐ 
+   │  Backend    │                  │  AI Model        │ 
+   │  (Express)  │────────────────  │  Service (YOLO)  │ 
+   │  Port 3000  │  Traffic Logic   │  Port 8000       │ 
    └─────────────┘                  └──────────────────┘
         │ ▲
         │ │ Coordinated Signals
         │ │ & Metrics
-        │ └─────────────────────────────────┐
-        │                                   │
-        └───────────────────────────────────┘
+        │ │
+        │ │
+        └──
 ```
 
 ### Data Flow
@@ -172,7 +164,6 @@ SmartFlow AI implements a **closed-loop traffic management system**:
 | **React Router** | 6.30 | Client-side routing |
 | **Socket.io Client** | 4.8 | Real-time WebSocket communication |
 | **Recharts** | 2.15 | Data visualization charts |
-| **Shadcn UI** | Latest | Accessible component library |
 
 ### Backend Integration
 | Tech | Version | Purpose |
@@ -340,7 +331,6 @@ Interactive 3D traffic simulation with realistic vehicles and emergency response
 **Interactive Controls:**
 - `DISPATCH_NS` - Start ambulance from North-South
 - `DISPATCH_EW` - Start ambulance from East-West
-- `DISPATCH_RANDOM` - Random direction + maximum turns for training
 - Mouse orbit controls for camera navigation
 
 #### 📊 Dashboard Page
@@ -353,7 +343,6 @@ Real-time traffic analytics and metrics:
 - **Congested roads** - Number of roads at high density
 - **Emergency alerts** - Active ambulance/emergency events
 - **Average speed** - Fleet-wide average vehicle speed
-- **Traffic history** - 30-minute trending graph
 - **Congestion heatmap** - City-wide traffic intensity visualization
 
 #### ⚙️ Signal Control Page
@@ -546,27 +535,19 @@ VITE_DEBUG=true
 - Monitor memory usage with DevTools Performance tab
 - Enable Vite fast refresh for instant updates
 
-### Code Style
-
-- **TypeScript** - Use strict mode
-- **Components** - Functional components with hooks
-- **Styling** - Tailwind CSS utility classes
-- **Naming** - PascalCase for components, camelCase for functions
-- **Directory** - Organize by feature/domain
-
 ---
 
 ## ⚡ Performance Optimization
 
 ### Current Optimizations Implemented
 
-| Optimization | Impact | Status |
+| Optimization | Impact |
 |---|---|---|
-| Frame skipping system | 99%+ frame capture | ✅ Implemented |
-| Image quality reduction (85% → 60%) | 70% smaller payload | ✅ Implemented |
-| Parallel camera processing | 5-8x faster for 4 cameras | ✅ Implemented |
-| FP16 inference | 2-3x speedup | ✅ Implemented |
-| WebSocket real-time updates | <10ms latency | ✅ Implemented |
+| Frame skipping system | 99%+ frame capture | 
+| Image quality reduction (85% → 60%) | 70% smaller payload |
+| Parallel camera processing | 5-8x faster for 4 cameras | 
+| FP16 inference | 2-3x speedup | 
+| WebSocket real-time updates | <10ms latency |
 
 ### Performance Metrics
 
@@ -577,15 +558,6 @@ VITE_DEBUG=true
 | **Image payload size** | 25-35KB (70% reduction) |
 | **WebSocket latency** | <10ms |
 | **Frame skip rate** | <1% (99%+ capture) |
-
-### Recommended Optimizations for Production
-
-1. **Code Splitting** - Lazy load pages and heavy components
-2. **Asset Optimization** - Compress images and models
-3. **Service Worker** - Cache API responses
-4. **CDN** - Serve assets from edge locations
-5. **Database** - Cache frequently accessed data in Redis
-6. **Load Testing** - Benchmark with k6 or JMeter
 
 ---
 
@@ -618,18 +590,6 @@ Configure in `vercel.json`:
     "VITE_AI_API_URL": "@ai_api_url"
   }
 }
-```
-
-#### Docker
-
-```dockerfile
-FROM node:18-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY dist ./dist
-EXPOSE 3000
-CMD ["npm", "run", "preview"]
 ```
 
 #### Environment Variables for Production
@@ -671,14 +631,6 @@ npm run test              # Run all tests once
 npm run test:watch      # Watch mode for development
 ```
 
-### PR Requirements
-
-1. ✅ TypeScript type-checks pass
-2. ✅ Builds successfully (`npm run build`)
-3. ✅ No console errors/warnings
-4. ✅ Responsive design verified
-5. ✅ Updated documentation if needed
-
 ---
 
 ## 👥 Team
@@ -688,23 +640,16 @@ npm run test:watch      # Watch mode for development
 | Name | Role | Institution |
 |------|------|-------------|
 | **Rupesh Varshney** | Full-stack Developer | B.Tech Computer Engineering, ZHCET |
-| **Austin Varshney** | Backend Developer | B.Tech Computer Engineering, ZHCET |
-| **Bhomik Varshney** | Frontend Developer | B.Tech Computer Engineering, ZHCET |
-| **Aryan Parashar** | AI/ML Engineer | B.Tech AI, ZHCET |
-| **Prakhar Saxena** | AI/ML Engineer | B.Tech AI, ZHCET |
+| **Austin Varshney** | Full-stack Developer | B.Tech Computer Engineering, ZHCET |
+| **Bhomik Varshney** | AI Developer | B.Tech Computer Engineering, ZHCET |
+| **Aryan Parashar** | AI Engineer | B.Tech AI, ZHCET |
+| **Prakhar Saxena** | ML Engineer | B.Tech AI, ZHCET |
 
 **Institution:** Zakir Husain College of Engineering and Technology, Aligarh Muslim University
 
 ---
 
 ## 📚 References
-
-### Official Documentation
-- [React Documentation](https://react.dev)
-- [Vite Documentation](https://vitejs.dev)
-- [Three.js Documentation](https://threejs.org/docs)
-- [React Three Fiber](https://docs.pmnd.rs/react-three-fiber)
-- [Tailwind CSS](https://tailwindcss.com)
 
 ### AI & Vision
 - [YOLO v8 Documentation](https://docs.ultralytics.com)
@@ -713,21 +658,6 @@ npm run test:watch      # Watch mode for development
 
 ### Traffic & Urban Solutions
 - [SUMO Traffic Simulation](https://www.eclipse.org/sumo)
-- [Google Maps Platform](https://developers.google.com/maps)
-
-### Related Projects
-- [Ultralytics YOLOv8](https://github.com/ultralytics/ultralytics)
-- [OpenCV](https://github.com/opencv/opencv)
-- [Express.js](https://github.com/expressjs/express)
-
----
-
-## 📞 Support & Communication
-
-- **GitHub Issues** - Bug reports and feature requests
-- **Discussions** - Technical discussions and architecture
-- **Email** - commitandconquer@example.com
-- **Hackathon** - India Innovates 2026
 
 ---
 
